@@ -1,0 +1,155 @@
+
+# Mini Leave Management System
+
+## Problem Statement
+
+This project is a Mini Leave Management System (LMS) designed for a startup with 50 employees. The system helps the HR team manage employee leaves efficiently by allowing them to add employees, apply for leaves, approve or reject leave requests, and track leave balances. It aims to automate the leave management process, prevent conflicts such as overlapping leaves or invalid date requests, and ensure accurate leave balance tracking.
+
+## Assumptions
+
+* Each employee starts with an annual leave balance of 20 days.
+* Only one type of leave is considered (no differentiation between sick leave, casual leave, etc.).
+* Weekends and public holidays are counted as leave days for simplicity.
+* Employees cannot apply for leave before their joining date.
+* Overlapping leave requests for the same employee are not allowed.
+* Leave balance resets at the beginning of each calendar year.
+* Only full-day leaves are supported.
+* Leave requests are initially marked as “Pending” and need HR approval.
+* Data is stored in memory and will reset if the server restarts.
+
+## Edge Cases Handled
+
+* Leave applied before the joining date is rejected.
+* Leave requests exceeding the available leave balance are rejected.
+* Leave requests with an end date before the start date are rejected.
+* Overlapping leave requests for the same employee are rejected.
+* Concurrent leave approvals check for sufficient balance before approving.
+* Requests for non-existent employees are handled with errors.
+* Rejected leave requests do not affect leave balances.
+* Invalid or malformed date formats are rejected.
+
+## API Endpoints
+
+### 1. Add Employee
+
+* **POST** `/employees`
+
+**Request Body:**
+
+```json
+{
+  "name": "John Doe",
+  "email": "john@example.com",
+  "department": "Engineering",
+  "joiningDate": "2024-01-15"
+}
+```
+
+**Response:**
+
+```json
+{
+  "id": 1,
+  "name": "John Doe",
+  "email": "john@example.com",
+  "department": "Engineering",
+  "joiningDate": "2024-01-15T00:00:00.000Z",
+  "leaveBalance": 20
+}
+```
+
+---
+
+### 2. Apply Leave
+
+* **POST** `/leaves/apply`
+
+**Request Body:**
+
+```json
+{
+  "employeeId": 1,
+  "startDate": "2024-03-01",
+  "endDate": "2024-03-05"
+}
+```
+
+**Response:**
+
+```json
+{
+  "id": 1,
+  "employeeId": 1,
+  "startDate": "2024-03-01T00:00:00.000Z",
+  "endDate": "2024-03-05T00:00:00.000Z",
+  "status": "Pending"
+}
+```
+
+---
+
+### 3. Approve or Reject Leave
+
+* **PUT** `/leaves/{leaveId}/status`
+
+**Request Body:**
+
+```json
+{
+  "status": "Approved"
+}
+```
+
+**Response:**
+
+```json
+{
+  "leaveRequestId": 1,
+  "status": "Approved",
+  "leaveBalanceRemaining": 15
+}
+```
+
+---
+
+### 4. Get Leave Balance
+
+* **GET** `/employees/{employeeId}/balance`
+
+**Response:**
+
+```json
+{
+  "employeeId": 1,
+  "leaveBalance": 15
+}
+```
+
+## Setup Instructions
+
+1. Clone the repository or copy the source code.
+2. Install Node.js and npm if not installed.
+3. Open terminal in the project folder.
+4. Run `npm install` to install dependencies.
+5. Run `node index.js` to start the server.
+6. Use Postman or any API client to test endpoints.
+
+## Potential Improvements
+
+* Add different leave types (sick leave, casual leave, etc.).
+* Implement frontend UI for better user experience.
+* Add email or in-app notifications for leave status changes.
+* Support half-day or hourly leaves.
+* Persist data using a database to avoid data loss on server restart.
+* Add role-based access control for employees, HR, and managers.
+* Add leave cancellation and modification features.
+* Integrate public holidays to exclude them from leave counts.
+* Generate leave reports and history for employees.
+
+## Known Limitations
+
+* Data is stored in-memory; restarting the server clears all data.
+* No authentication or authorization implemented.
+* No distinction between different leave types.
+* Weekends and holidays are counted as leave days.
+
