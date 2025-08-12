@@ -153,3 +153,8 @@ This project is a Mini Leave Management System (LMS) designed for a startup with
 * No distinction between different leave types.
 * Weekends and holidays are counted as leave days.
 
+## Deployment / Live Demo
+The Leave Management System is deployed and accessible at:
+https://leave-management-system-y23v.onrender.com
+
+You can test all the API endpoints live using this base URL.
